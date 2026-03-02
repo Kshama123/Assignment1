@@ -22,7 +22,11 @@ elif score>=60:
 else:
     print("Grade: F")
 
+output
+======
 
+Enter your score:75
+Grade: C
 
 
 2 Student Grades
@@ -76,6 +80,46 @@ while True:
         print("Invalid choice. Please select between 1-4.")
 
 
+output
+======
+
+1. Add Student
+2. Update Student Grade
+3. Print All Student Grades
+4. Exit
+Enter your choice (1-4): 1
+Enter student name: Uma
+Enter student grade: B
+Student added successfully.
+
+1. Add Student
+2. Update Student Grade
+3. Print All Student Grades
+4. Exit
+Enter your choice (1-4): 2
+Enter student name to update: Uma
+Enter new grade: A
+Grade updated successfully.
+
+1. Add Student
+2. Update Student Grade
+3. Print All Student Grades
+4. Exit
+Enter your choice (1-4): 3
+
+Student Grades:
+Uma : A
+
+1. Add Student
+2. Update Student Grade
+3. Print All Student Grades
+4. Exit
+Enter your choice (1-4): 4
+Exiting program.
+
+=============================
+
+
 
 3.Write to a File
 Write a program to create a text file and write some content to it.
@@ -87,7 +131,7 @@ Sol:
 
 file = open("sample.txt", "w")
 
-file.write("Hello, this is my first file.\n")
+file.write("Hello, Kshama Sharma here.\n")
 file.write("Writing data to a file using Python.\n")
 file.write("File operations are easy to learn.\n")
 
@@ -95,6 +139,14 @@ file.close()
 
 print("Content written to the file successfully.")
 
+
+output
+======
+
+Hello, Kshama Sharma here.
+Writing data to a file using Python.
+File operations are easy to learn.
+==================
 
 
 
@@ -115,3 +167,13 @@ print(content)
 
 # Close the file
 file.close()
+
+
+
+output
+=======
+
+File Content:
+Hello, this is my first file.
+Python file handling is easy.
+===============================
