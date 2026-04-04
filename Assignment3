@@ -1,0 +1,194 @@
+1. Create a Flask application with an /api route. When this route is accessed, it should return a JSON list. The data should be stored in a backend file, read from it, and sent as a response.
+
+
+Soln:-
+
+from flask import Flask, jsonify
+import json
+
+app = Flask(__name__)
+
+@app.route('/api', methods=['GET'])
+def get_data():
+    try:
+        # Open and read the backend file
+        with open('data.json', 'r') as file:
+            data = json.load(file)
+
+        # Return JSON response
+        return jsonify(data)
+
+    except FileNotFoundError:
+        return jsonify({"error": "data.json file not found"}), 404
+
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON format in data.json"}), 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+Create a file named data.json in the same directory:
+
+
+[
+    {
+        "id": 1,
+        "name": "Kshama"
+    },
+    {
+        "id": 2,
+        "name": "Rahul"
+    },
+    {
+        "id": 3,
+        "name": "Aman"
+    }
+]
+
+
+Run the application:-
+python app.py
+
+
+output
+Running on http://127.0.0.1:5000/
+
+
+Now response
+
+http://127.0.0.1:5000/api
+
+[
+  {
+    "id": 1,
+    "name": "Kshama"
+  },
+  {
+    "id": 2,
+    "name": "Rahul"
+  },
+  {
+    "id": 3,
+    "name": "Aman"
+  }
+]
+
+2. Create a form on the frontend that, when submitted, inserts data into MongoDB Atlas. Upon successful submission, the user should be redirected to another page displaying the message "Data submitted successfully". If there's an error during submission, display the error on the same page without redirection.
+
+
+
+
+solution:-
+
+app.py
+=====
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from pymongo import MongoClient
+
+app = Flask(__name__)
+CORS(app)
+
+# MongoDB Atlas Connection
+client = MongoClient("your_mongodb_atlas_connection_string")
+db = client["testdb"]
+collection = db["users"]
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    try:
+        data = request.json
+
+        # Insert into MongoDB
+        collection.insert_one(data)
+
+        return jsonify({"message": "success"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+index.html
+==========
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Submission</title>
+</head>
+<body>
+
+<h2>Submit Form</h2>
+
+<form id="myForm">
+    <input type="text" id="name" placeholder="Enter Name" required><br><br>
+    <input type="email" id="email" placeholder="Enter Email" required><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<p id="error" style="color:red;"></p>
+
+<script>
+document.getElementById("myForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value
+    };
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/submit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Redirect on success
+            window.location.href = "success.html";
+        } else {
+            // Show error on same page
+            document.getElementById("error").innerText = result.error;
+        }
+
+    } catch (error) {
+        document.getElementById("error").innerText = error.message;
+    }
+});
+</script>
+
+</body>
+</html>
+
+
+success.html
+============
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Success</title>
+</head>
+<body>
+
+<h2>Data submitted successfully</h2>
+
+</body>
+</html>
+
+
+bash command
+============
+mongodb+srv://username:password@cluster.mongodb.net/
