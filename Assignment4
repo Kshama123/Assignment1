@@ -1,0 +1,336 @@
+1. Create a new GitHub repository.
+Clone the repository to your local machine using SSH (generate an SSH key if needed, add the public key to your GitHub account).
+Create a new branch named after your username (e.g., Tutedude).
+Add your Flask project files to this branch.
+Commit the changes and merge the branch into the main branch.
+
+
+sol:-
+Create a New GitHub Repository
+
+Generate and Add SSH Key
+Generate SSH key:
+ssh-keygen -t ed25519 -C "kshama@gmail.com"
+
+start SSH agent and add key:
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+Copy public key:
+cat ~/.ssh/id_ed25519.pub
+
+
+Clone Repository Using SSH
+git clone git@github.com:username/flask-project.git
+cd flask-project
+
+Step 4: Create a New Branch (Username)
+git checkout -b Tutedude
+
+
+
+Copy your Flask project files into the repo folder, then:
+
+git add .
+
+
+
+Commit Changes
+git commit -m "Added Flask project files"
+
+
+Push Branch to GitHub
+git push origin Tutedude
+
+Merge Branch into Main
+Using Git commands:
+git checkout main
+git pull origin main
+git merge your_username
+git push origin main
+
+I created a GitHub repository, configured SSH, cloned it locally, created a new branch, added Flask project files, committed and pushed changes, and finally merged the branch into the main branch.
+
+
+
+
+2. Create a new branch named <your_name>_new (e.g., Tutedude_new).
+Update the content of the JSON file used for the /api route in this branch.
+Merge the <your_name>_new branch into the main branch.
+If there are conflicts during the merge, resolve them by accepting the changes from the <your_name>_new branch.
+Add the resolved changes to the staging area, commit them, and push the updates to the remote repository.
+
+
+
+Sol:
+
+Step 1: Create a New Branch
+git checkout -b Tutedude_new
+
+Step 2: Update JSON File
+
+[
+  {
+    "name": "Tutedude",
+    "role": "DevOps Engineer"
+  }
+]
+
+Step 3: Add and Commit Changes
+git add data.json
+git commit -m "Updated JSON data for API"
+
+
+Step 4: Push Branch to Remote
+git push origin Tutedude_new
+
+
+Step 5: Merge Branch into Main
+git checkout main
+git pull origin main
+git merge Tutedude_new
+
+
+Step 7: Add Resolved File to Staging
+git add data.json
+
+
+Step 8: Commit Resolved Changes
+git commit -m "Resolved merge conflict by accepting Tutedude_new changes"
+
+
+Step 9: Push Final Changes
+git push origin main
+
+
+I created a new branch, updated the JSON file, committed and pushed changes. Then I merged the branch into main, resolved conflicts by accepting the new branch changes, staged the resolved files, committed, and pushed the final updates.
+
+
+
+3. Branch Creation:
+Create two branches: master_1 and master_2 from the main branch.
+Feature Development in master_1:
+In the master_1 branch, create a To-Do Page in the frontend.
+The page should contain a form with the following fields:
+Item Name
+Item Description
+Backend API in master_2:
+In the master_2 branch, create a backend route named /submittodoitem.
+This route will:
+Accept itemName and itemDescription via a POST request.
+Store these details in a MongoDB database.
+Merging Changes:
+Merge the changes from both master_1 and master_2 into the main branch.
+
+
+Solution:-
+
+
+Create two branches from main:
+
+git checkout main
+git pull origin main
+
+git checkout -b master_1
+git checkout main
+git checkout -b master_2
+
+
+Switch to branch:
+
+git checkout master_1
+
+index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do Page</title>
+</head>
+<body>
+
+<h2>Add To-Do Item</h2>
+
+<form id="todoForm">
+    <input type="text" id="itemName" placeholder="Item Name" required><br><br>
+    <textarea id="itemDescription" placeholder="Item Description" required></textarea><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+document.getElementById("todoForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const data = {
+        itemName: document.getElementById("itemName").value,
+        itemDescription: document.getElementById("itemDescription").value
+    };
+
+    await fetch("http://127.0.0.1:5000/submittodoitem", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    alert("Item submitted");
+});
+</script>
+
+</body>
+</html>
+
+Commit changes:
+git add .
+git commit -m "Added To-Do frontend page"
+git push origin master_1
+
+Switch branch:
+git checkout master_2
+
+app.py
+
+from flask import Flask, request, jsonify
+from pymongo import MongoClient
+
+app = Flask(__name__)
+
+client = MongoClient("your_mongodb_connection_string")
+db = client["todo_db"]
+collection = db["items"]
+
+@app.route('/submittodoitem', methods=['POST'])
+def submit_todo():
+    try:
+        data = request.json
+
+        item = {
+            "itemName": data.get("itemName"),
+            "itemDescription": data.get("itemDescription")
+        }
+
+        collection.insert_one(item)
+
+        return jsonify({"message": "Item stored successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+Commit changes:
+git add .
+git commit -m "Added backend API for todo items"
+git push origin master_2
+
+
+Merge Changes into main
+Merge master_1:
+git checkout main
+git pull origin main
+git merge master_1
+
+
+Merge master_2:
+git merge master_2
+
+Push Final Code
+git push origin main
+
+
+
+4. Enhancing the To-Do Form in master_1:
+In the master_1 branch, add the following fields to the To-Do form:
+Item ID
+Item UUID
+Item Hash
+Committing in Sequence:
+Add and commit each field separately in the following order:
+First commit: Add Item ID field.
+Second commit: Add Item UUID field.
+Third commit: Add Item Hash field.
+Merging to main:
+Merge the master_1 branch into the main branch.
+Git Reset and Commit Deletion:
+In the main branch, use Git Reset to roll back to the commit where only the Item ID field was added.
+Use git reset --soft to ensure changes remain staged.
+Re-commit this state to the main branch.
+Merge this updated state to the main branch.
+Rebasing Changes:
+Rebase the updated changes in the main branch to the master_1 branch.
+Clarification:
+During rebasing, preserve individual commits to maintain the commit history for each change (i.e., do not squash commits).
+Use git rebase main master_1 to integrate changes from the main branch back into the master_1 branch.
+
+
+
+Solution:
+
+
+Switch to master_1 Branch
+git checkout master_1
+
+
+Enhance To-Do Form 
+
+<input type="text" id="itemId" placeholder="Item ID" required>
+
+git add .
+git commit -m "Added Item ID field"
+
+
+
+Second Commit: Add Item UUID
+<input type="text" id="itemUUID" placeholder="Item UUID" required>
+
+
+
+git add .
+git commit -m "Added Item UUID field"
+
+
+Third Commit: Add Item Hash
+<input type="text" id="itemHash" placeholder="Item Hash" required>
+
+git add .
+git commit -m "Added Item Hash field"
+
+Merge master_1 into main
+git checkout main
+git pull origin main
+git merge master_1
+
+
+Git Reset to Specific Commit (Only Item ID)
+
+git log --oneline
+
+
+
+abc123 Added Item ID field
+
+Reset using --soft
+git reset --soft abc123
+
+
+Re-commit this state:
+git commit -m "Reverted to Item ID state"
+
+
+Push changes:
+git push origin main
+
+
+Rebase master_1 with Updated main
+git checkout master_1
+git rebase main
+
+
+Push After Rebase
+git push origin master_1 --force
+
